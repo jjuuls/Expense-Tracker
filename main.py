@@ -1,5 +1,4 @@
-from database import connect, add_expense, view_expenses, get_total, filter_expenses
-
+from database import connect, add_expense, view_expenses, get_total, filter_expenses, delete_expense
 
 # Initialize the database and table
 connect()
@@ -16,8 +15,12 @@ while True:
     print('3. View Total Expenses')
 
     print('4. Filter Expenses by Category')
+    
+    print('5. Delete Expense')
+    
+    print('6. Exit')
 
-    print('5. Exit')
+    
 
 
     choice = input("Enter your choice: ")
@@ -102,8 +105,35 @@ while True:
 
         """)
 
+  
+    # Delete an expense by ID
+    elif choice == "5":
+
+        expenses = view_expenses()
+
+        for expense in expenses:
+
+            print(expense)
+
+        expense_id = input("Enter expense ID to delete: ")
+
+        if expense_id.isdigit():
+
+            deleted = delete_expense(int(expense_id))
+
+            if deleted:
+
+                print("Expense deleted successfully.")
+
+            else:
+                print("No expense found with that ID.")
+
+        else:
+
+            print("Please enter a valid expense ID.")
+
     # Exit the application
-    elif choice == '5':
+    elif choice == '6':
 
         print("Exiting the Expense Tracker. Goodbye!")
 
@@ -113,3 +143,4 @@ while True:
     else:
 
         print("Invalid choice. Please try again.")
+    

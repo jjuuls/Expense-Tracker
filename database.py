@@ -85,10 +85,29 @@ def filter_expenses(category):
 
     cursor = conn.cursor()
 
-    cursor.execute('SELECT * FROM expenses WHERE category = ?', (category,))
+    # Use LOWER() to perform a case-insensitive search
+    cursor.execute('SELECT * FROM expenses WHERE LOWER(category) = LOWER(?)', (category,))
 
     expenses = cursor.fetchall()
 
     conn.close()
 
     return expenses
+
+
+# Delete an expense by its ID
+def delete_expense(expense_id):
+
+    conn = sqlite3.connect('expenses.db')
+
+    cursor = conn.cursor()
+
+    cursor.execute('DELETE FROM expenses WHERE id = ?', (expense_id,))
+
+    deleted = cursor.rowcount  
+
+    conn.commit()
+
+    conn.close()
+
+    return deleted

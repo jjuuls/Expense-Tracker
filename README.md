@@ -8,8 +8,10 @@ A command-line expense tracker application built with Python and SQLite.
 - View all expenses
 - View total spending
 - Filter expenses by category
+- Case-insensitive category filtering
+- Delete expenses by ID
 - Persistent SQLite database storage
-- Input validation for expense amounts
+- Input validation for amounts and expense IDs
 
 ## Technologies Used
 
@@ -26,6 +28,16 @@ A command-line expense tracker application built with Python and SQLite.
 ```bash
 python main.py
 ```
+## Example Menu
+```
+Expense Tracker Menu:
+1. Add Expense
+2. View Expenses
+3. View Total Expenses
+4. Filter Expenses by Category
+5. Delete Expense
+6. Exit
+```
 
 ## Project Structure
 
@@ -39,8 +51,8 @@ expense-tracker/
 ```
 ## Future Improvements
 
-- Delete expenses
 - Update existing expenses
 - Add expense dates
 - Export data to CSV
 - Build a GUI version
+
