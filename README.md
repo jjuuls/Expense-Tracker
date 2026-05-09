@@ -28,6 +28,7 @@ A command-line expense tracker application built with Python and SQLite.
 ```bash
 python main.py
 ```
+
 ## Example Menu
 ```
 Expense Tracker Menu:
@@ -49,6 +50,7 @@ expense-tracker/
 ├── README.md
 ├── .gitignore
 ```
+
 ## Future Improvements
 
 - Update existing expenses
