@@ -1,4 +1,7 @@
+from datetime import datetime
+
 from database import connect, add_expense, view_expenses, get_total, filter_expenses, delete_expense
+
 
 # Initialize the database and table
 connect()
@@ -39,6 +42,8 @@ while True:
 
             continue
 
+        date = datetime.now().strftime("%Y-%m-%d")
+
         category = input("Enter the category: ")
 
         description = input("Enter the description: ")
@@ -65,6 +70,8 @@ while True:
         Category: {expense[2]}
 
         Description: {expense[3]}
+
+        Date: {expense[4]}
 
         --------------------
 

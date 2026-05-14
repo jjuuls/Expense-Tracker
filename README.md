@@ -12,6 +12,7 @@ A command-line expense tracker application built with Python and SQLite.
 - Delete expenses by ID
 - Persistent SQLite database storage
 - Input validation for amounts and expense IDs
+- Add expense dates
 
 ## Technologies Used
 
@@ -54,7 +55,5 @@ expense-tracker/
 ## Future Improvements
 
 - Update existing expenses
-- Add expense dates
 - Export data to CSV
 - Build a GUI version
-

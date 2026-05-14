@@ -1,5 +1,7 @@
 import sqlite3
 
+from datetime import datetime
+
 
 # Create the database and expenses table if it does not exist
 def connect():
@@ -18,7 +20,9 @@ def connect():
                    
             category TEXT NOT NULL,
                    
-            description TEXT NOT NULL
+            description TEXT NOT NULL,
+            
+            date TEXT NOT NULL
         )
     ''')
     conn.commit()
@@ -33,13 +37,11 @@ def add_expense(amount, category, description):
 
     cursor = conn.cursor()
 
-    cursor.execute('''
-                   
-        INSERT INTO expenses (amount, category, description)
-                   
-        VALUES (?, ?, ?)
-                   
-    ''', (amount, category, description))
+    date = datetime.now().strftime("%Y-%m-%d")
+
+    cursor.execute('INSERT INTO expenses (amount, category, description, date) VALUES (?, ?, ?, ?)',
+                    (amount, category, description, date)
+                    )
 
     conn.commit()
 
