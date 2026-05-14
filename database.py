@@ -113,3 +113,24 @@ def delete_expense(expense_id):
     conn.close()
 
     return deleted
+
+
+def display_expenses(expenses):
+
+    for expense in expenses:
+
+        print(f"""
+                  
+        ID: {expense[0]}
+
+        Amount: ${expense[1]:.2f}
+
+        Category: {expense[2]}
+
+        Description: {expense[3]}
+
+        Date: {expense[4]}
+
+        --------------------
+
+        """)

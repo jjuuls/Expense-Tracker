@@ -1,6 +1,4 @@
-from datetime import datetime
-
-from database import connect, add_expense, view_expenses, get_total, filter_expenses, delete_expense
+from database import connect, add_expense, view_expenses, get_total, filter_expenses, delete_expense, display_expenses
 
 
 # Initialize the database and table
@@ -42,8 +40,6 @@ while True:
 
             continue
 
-        date = datetime.now().strftime("%Y-%m-%d")
-
         category = input("Enter the category: ")
 
         description = input("Enter the description: ")
@@ -59,23 +55,7 @@ while True:
 
         print('All Expenses:')
 
-        for expense in expenses:
-
-            print(f"""
-                  
-        ID: {expense[0]}
-
-        Amount: ${expense[1]:.2f}
-
-        Category: {expense[2]}
-
-        Description: {expense[3]}
-
-        Date: {expense[4]}
-
-        --------------------
-
-        """)
+        display_expenses(expenses)
 
     # Display the total amount spent
     elif choice == '3':
@@ -96,21 +76,7 @@ while True:
 
         print(f'Expenses in category "{category}":')
 
-        for expense in expenses:
-
-            print(f"""
-                  
-        ID: {expense[0]}
-
-        Amount: ${expense[1]:.2f}
-
-        Category: {expense[2]}
-
-        Description: {expense[3]}
-
-        --------------------
-
-        """)
+        display_expenses(expenses)
 
   
     # Delete an expense by ID
@@ -118,9 +84,7 @@ while True:
 
         expenses = view_expenses()
 
-        for expense in expenses:
-
-            print(expense)
+        display_expenses(expenses)
 
         expense_id = input("Enter expense ID to delete: ")
 
