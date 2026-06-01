@@ -2,33 +2,64 @@
 
 A command-line personal finance and budgeting application built with Python and SQLite.
 
-This application allows users to track expenses, income, monthly budgets, savings rate, category spending, and monthly financial reports using a persistent SQLite database.
+This project started as a simple expense tracker built to help manage finances during a career transition. As new requirements emerged through real-world usage, it evolved into a modular personal finance management system featuring budgeting, reporting, analytics, and SQLite-backed persistence. 
 
 ---
 
 ## Features
+
+### Expenses
 
 - Add expenses
 - View all expenses
 - View total expenses
 - Filter expenses by category
 - Delete expenses by ID
-- View spending totals by category
+- Automatic date tracking
+- View monthly expense totals
+
+### Income
+
 - Add income records
 - View all income records
 - View total income
 - Delete income records by ID
-- View net balance
-- View savings rate
+- Automatic date tracking
+
+### Budgets
+
 - Set monthly budgets
 - View monthly budgets
+- Update existing budgets
 - Delete monthly budgets
 - View monthly budget summaries
+- Compare spending against budget limits
+
+### Reports & Analytics
+
+- View net balance
+- View savings rate
+- View spending totals by category
 - Generate monthly financial reports
-- Automatic date tracking
+- Compare spending between two months
+
+### Dashboard
+
+- Display total income
+- Display total expenses
+- Display net balance
+- Display current month spending
+- Display current budget status
+- Display budget usage percentage
+- Display remaining budget or over-budget amount
+
+### Application
+
 - Persistent SQLite database storage
 - Menu-driven command-line interface
 - Input validation for amounts and IDs
+- Modular application architecture
+- Automatic table creation on startup
 
 ---
 
@@ -36,6 +67,7 @@ This application allows users to track expenses, income, monthly budgets, saving
 
 - Python
 - SQLite
+- SQL
 - Git & GitHub
 
 ---
@@ -62,40 +94,46 @@ python main.py
 
 ---
 
-## Example Menu
+## Example Start Up/Main Menu
 
 ```text
-Expense Tracker Menu
 
---- Expenses ---
+          
+Expense Tracker Dashboard
 
-1. Add Expense
-2. View Expenses
-3. View Total Expenses
-4. Filter Expenses by Category
-5. Delete Expense
-6. View Category Totals
+          
+Total Income: $500.00
 
---- Income ---
+Total Expenses: $365.50
 
-7. Add Income
-8. View Income
-9. View Total Income
-10. Delete Income
+Net Balance: $134.50
 
---- Budget / Reports ---
+Current Month: 2026-06
 
-11. View Net Balance
-12. View Savings Rate
-13. Set Monthly Budget
-14. View Monthly Budget
-15. Monthly Budget Summary
-16. Delete Monthly Budget
-17. View Monthly Report
+Spent This Month: $0.00
 
---- App ---
 
-18. Exit
+
+Monthly Budget: Not set
+--------------------
+
+              
+Expense Tracker Main Menu
+
+              
+1. Expenses
+              
+2. Income
+              
+3. Budgets
+              
+4. Reports
+              
+5. Exit
+              
+
+Enter your choice: 
+
 ```
 
 ---
@@ -107,9 +145,44 @@ Expense-Tracker/
 │
 ├── main.py
 ├── database.py
+├── expenses.py
+├── income.py
+├── budgets.py
+├── reports.py
 ├── expenses.db
 ├── README.md
 └── .gitignore
+```
+
+---
+
+## Database Structure
+
+### Expenses Table
+
+```sql
+id INTEGER PRIMARY KEY AUTOINCREMENT
+amount REAL NOT NULL
+category TEXT NOT NULL
+description TEXT NOT NULL
+date TEXT NOT NULL
+```
+
+### Income Table
+
+```sql
+id INTEGER PRIMARY KEY AUTOINCREMENT
+amount REAL NOT NULL
+source TEXT NOT NULL
+date TEXT NOT NULL
+```
+
+### Budgets Table
+
+```sql
+id INTEGER PRIMARY KEY AUTOINCREMENT
+month TEXT NOT NULL UNIQUE
+amount REAL NOT NULL
 ```
 
 ---
@@ -120,27 +193,34 @@ This project helped me practice:
 
 - Working with SQLite databases
 - Creating and managing multiple database tables
-- Writing SQL queries with SELECT, INSERT, DELETE, SUM, GROUP BY, ORDER BY, and ON CONFLICT
+- Writing SQL queries with SELECT, INSERT, DELETE, SUM, GROUP BY, ORDER BY, LIKE, and ON CONFLICT
 - Building CRUD functionality
-- Organizing Python code into reusable functions
-- Separating menu logic from database logic
+- Organizing Python code into reusable modules
+- Separating business logic from user interface logic
 - Handling user input and validation
 - Performing financial calculations
 - Generating reports from stored data
-- Building a real-world command-line budgeting application
+- Designing dashboard-style summaries
+- Building budgeting and financial analytics features
+- Evolving requirements through real-world usage
+- Structuring a larger multi-file Python application
 
 ---
 
 ## Future Improvements
 
-- Add weekly reports
 - Add expense editing
 - Add income editing
 - Add custom date entry
 - Export reports to CSV
+- Import transactions from CSV files
 - Add recurring expenses
+- Add recurring income
+- Add savings goals
 - Add budget alerts
+- Add automated testing
 - Improve report formatting
+- Build a web version using Flask or Django
 
 ---
 
