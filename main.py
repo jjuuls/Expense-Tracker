@@ -65,6 +65,8 @@ from reports import (
     display_month_comparison,
 )
 
+from csv_import import import_transactions_from_csv
+
 
 def expenses_menu():
     
@@ -84,7 +86,7 @@ Expenses Menu
 4. Filter Expenses by Category
               
 5. Delete Expense
-              
+                            
 6. Back to Main Menu
               
 
@@ -458,7 +460,9 @@ Expense Tracker Main Menu
               
 4. Reports
               
-5. Exit
+5. Import Bank Transactions from CSV
+              
+6. Exit
               
 """)
 
@@ -487,12 +491,19 @@ Expense Tracker Main Menu
 
         elif choice == "5":
             
+            file_path = input("\nEnter the path to the CSV file: ")
+            
+            import_transactions_from_csv(file_path)
+
+        elif choice == "6":
+            
             print("\nExiting the Expense Tracker. Goodbye!\n")
             
             break
 
 
         else:
+            
             print("\nInvalid choice. Please try again.\n")
 
 
