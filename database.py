@@ -56,6 +56,20 @@ def create_tables():
         )
     """)
 
+    # The unique content hash is the durable guard against importing one file twice.
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS csv_imports (
+
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+
+            file_hash TEXT NOT NULL UNIQUE,
+
+            file_name TEXT NOT NULL,
+
+            imported_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+        )
+    """)
+
     conn.commit()
 
     conn.close()

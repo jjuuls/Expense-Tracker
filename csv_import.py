@@ -1,4 +1,8 @@
 import csv
+import hashlib
+
+from contextlib import closing
+from pathlib import Path
 
 from database import get_connection
 
@@ -132,6 +136,20 @@ def categorize_transaction(description):
     return "Uncategorized"
 
 
+def calculate_file_hash(file_path):
+
+    file_hash = hashlib.sha256()
+
+    with open(file_path, "rb") as file:
+
+        # Chunked reads keep hashing memory-efficient even for unusually large exports.
+        for chunk in iter(lambda: file.read(8192), b""):
+
+            file_hash.update(chunk)
+
+    return file_hash.hexdigest()
+
+
 
 # Bank exports often include payment method text, locations, and masked card numbers.
 # Matching against merchant keywords lets the app classify real-world transaction descriptions.
@@ -145,96 +163,124 @@ def import_transactions_from_csv(file_path):
 
     try:
 
-        conn = get_connection()
+        file_hash = calculate_file_hash(file_path)
 
-        cursor = conn.cursor()
+        with closing(get_connection()) as conn:
 
-        with open(file_path, "r", encoding="utf-8-sig") as file:
+            cursor = conn.cursor()
 
-            reader = csv.DictReader(file)
+            # Content-based matching still catches a duplicate after the file is renamed.
+            cursor.execute(
 
-            for row in reader:
+                "SELECT 1 FROM csv_imports WHERE file_hash = ?",
 
-                try:
+                (file_hash,)
+            )
 
-                    date = row["Transaction Date"].strip()
+            if cursor.fetchone():
 
-                    if "PENDING" in date.upper():
+                print("\nThis CSV file has already been imported. No transactions were added.\n")
+
+                return
+
+            with open(file_path, "r", encoding="utf-8-sig") as file:
+
+                reader = csv.DictReader(file)
+
+                for row in reader:
+
+                    try:
+
+                        date = row["Transaction Date"].strip()
+
+                        if "PENDING" in date.upper():
+
+                            skipped += 1
+
+                            continue
+
+                        description = row["Transaction Description"].strip()
+
+                        amount_text = (
+
+                            row["Amount"]
+
+                            .replace("$", "")
+
+                            .replace(",", "")
+
+                            .replace("+", "")
+
+                            .replace(" ", "")
+
+                            .strip()
+                        )
+
+                        amount = float(amount_text)
+
+                        if amount < 0:
+
+                            cursor.execute(
+
+                                """
+                                INSERT INTO expenses
+
+                                (amount, category, description, date)
+
+                                VALUES (?, ?, ?, ?)
+                                """,
+                                (
+                                    abs(amount),
+
+                                    categorize_transaction(description),
+
+                                    description,
+
+                                    date
+                                )
+                            )
+
+                            expenses_imported += 1
+
+                        else:
+
+                            cursor.execute(
+
+                                """
+                                INSERT INTO income
+
+                                (amount, source, date)
+
+                                VALUES (?, ?, ?)
+                                """,
+                                (
+                                    amount,
+
+                                    description,
+
+                                    date
+                                )
+                            )
+
+                            income_imported += 1
+
+                    except (ValueError, KeyError):
 
                         skipped += 1
 
-                        continue
+            # Save the fingerprint only after every row is processed, allowing a failed
+            # import to be corrected and retried instead of being permanently blocked.
+            cursor.execute(
 
-                    description = row["Transaction Description"].strip()
+                """
+                INSERT INTO csv_imports (file_hash, file_name)
 
-                    amount_text = (
+                VALUES (?, ?)
+                """,
+                (file_hash, Path(file_path).name)
+            )
 
-                        row["Amount"]
-
-                        .replace("$", "")
-
-                        .replace(",", "")
-
-                        .replace("+", "")
-
-                        .replace(" ", "")
-
-                        .strip()
-                    )
-
-                    amount = float(amount_text)
-
-                    if amount < 0:
-
-                        cursor.execute(
-
-                            """
-                            INSERT INTO expenses
-                             
-                            (amount, category, description, date)
-
-                            VALUES (?, ?, ?, ?)
-                            """,
-                            (
-                                abs(amount),
-
-                                categorize_transaction(description), 
-
-                                description,
-
-                                date
-                            )
-                        )
-
-                        expenses_imported += 1
-
-                    else:
-
-                        cursor.execute(
-
-                            """
-                            INSERT INTO income
-
-                            (amount, source, date)
-
-                            VALUES (?, ?, ?)
-                            """,
-                            (
-                                amount,
-                                description,
-                                date
-                            )
-                        )
-
-                        income_imported += 1
-
-                except (ValueError, KeyError):
-
-                    skipped += 1
-
-        conn.commit()
-
-        conn.close()
+            conn.commit()
 
         print(f"""
 

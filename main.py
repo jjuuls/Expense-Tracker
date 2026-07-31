@@ -506,5 +506,6 @@ Expense Tracker Main Menu
             
             print("\nInvalid choice. Please try again.\n")
 
+if __name__ == "__main__":
 
-main()
+    main()

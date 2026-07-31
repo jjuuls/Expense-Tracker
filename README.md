@@ -43,6 +43,7 @@ This project started as a simple expense tracker built to help manage finances d
 - Clean bank-formatted dollar amounts
 - Store imported transactions in SQLite
 - Display import summaries with imported and skipped row counts
+- Prevent repeat imports of the same CSV file
 
 ### Automatic Categorization
 
@@ -208,6 +209,15 @@ month TEXT NOT NULL UNIQUE
 amount REAL NOT NULL
 ```
 
+### CSV Imports Table
+
+```sql
+id INTEGER PRIMARY KEY AUTOINCREMENT
+file_hash TEXT NOT NULL UNIQUE
+file_name TEXT NOT NULL
+imported_at TEXT NOT NULL
+```
+
 ---
 
 ## What I Learned
@@ -235,7 +245,6 @@ This project helped me practice:
 
 ## Future Improvements
 
-- Add duplicate detection for CSV imports
 - Add import preview before saving transactions
 - Store category rules in a JSON file
 - Allow users to edit category rules from the menu
